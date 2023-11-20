@@ -13,4 +13,6 @@ public interface UserService {
 
  UserServiceModel findById(Long id);
 
+    boolean isUsernameExists(String username);
+
 }

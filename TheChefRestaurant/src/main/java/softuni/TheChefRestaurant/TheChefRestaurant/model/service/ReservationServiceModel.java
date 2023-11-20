@@ -1,14 +1,15 @@
-package softuni.TheChefRestaurant.TheChefRestaurant.model.entity;
+package softuni.TheChefRestaurant.TheChefRestaurant.model.service;
 
-import jakarta.persistence.*;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.Category;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.Picture;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.UserEntity;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.enums.SectionNameEnum;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Entity
-@Table(name="reservations")
-public class Reservation extends BaseEntity{
+public class ReservationServiceModel {
+    private Long id;
     private String name;
     private SectionNameEnum section;
     private UserEntity author;
@@ -18,12 +19,17 @@ public class Reservation extends BaseEntity{
     private Set<Category> categories;
     private Set<Picture> pictures;
 
-
-
-
-    public Reservation() {
+    public ReservationServiceModel() {
     }
-   @Column(nullable = false)
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -31,7 +37,7 @@ public class Reservation extends BaseEntity{
     public void setName(String name) {
         this.name = name;
     }
-   @Enumerated(EnumType.STRING)
+
     public SectionNameEnum getSection() {
         return section;
     }
@@ -39,7 +45,7 @@ public class Reservation extends BaseEntity{
     public void setSection(SectionNameEnum section) {
         this.section = section;
     }
-    @ManyToOne
+
     public UserEntity getAuthor() {
         return author;
     }
@@ -48,39 +54,42 @@ public class Reservation extends BaseEntity{
         this.author = author;
     }
 
-   @Column(nullable = false)
-    public Integer getCountPeople() {
-        return countPeople;
-    }
-    public void setCountPeople(Integer countPeople) {
-        this.countPeople = countPeople;
-    }
- @Column(nullable = false)
     public LocalDateTime getDateTime() {
         return dateTime;
     }
+
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
-    @Column(columnDefinition = "TEXT")
+    public Integer getCountPeople() {
+        return countPeople;
+    }
+
+    public void setCountPeople(Integer countPeople) {
+        this.countPeople = countPeople;
+    }
+
     public String getSpecialRequest() {
         return specialRequest;
     }
+
     public void setSpecialRequest(String specialRequest) {
         this.specialRequest = specialRequest;
     }
-    @ManyToMany(fetch = FetchType.EAGER)
+
     public Set<Category> getCategories() {
         return categories;
     }
+
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.EAGER)
+
     public Set<Picture> getPictures() {
         return pictures;
     }
+
     public void setPictures(Set<Picture> pictures) {
         this.pictures = pictures;
     }
