@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name="reservations")
 public class Reservation extends BaseEntity{
     private String name;
+    private String phoneNumber;
     private SectionNameEnum section;
     private UserEntity author;
     private LocalDateTime dateTime;
@@ -27,35 +28,42 @@ public class Reservation extends BaseEntity{
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-   @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Enumerated(EnumType.STRING)
     public SectionNameEnum getSection() {
         return section;
     }
-
     public void setSection(SectionNameEnum section) {
         this.section = section;
     }
+
     @ManyToOne
     public UserEntity getAuthor() {
         return author;
     }
-
     public void setAuthor(UserEntity author) {
         this.author = author;
     }
 
-   @Column(nullable = false)
+    @Column(nullable = false)
     public Integer getCountPeople() {
         return countPeople;
     }
     public void setCountPeople(Integer countPeople) {
         this.countPeople = countPeople;
     }
- @Column(nullable = false)
+
+    @Column(nullable = false)
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -70,6 +78,7 @@ public class Reservation extends BaseEntity{
     public void setSpecialRequest(String specialRequest) {
         this.specialRequest = specialRequest;
     }
+
     @ManyToMany(fetch = FetchType.EAGER)
     public Set<Category> getCategories() {
         return categories;
@@ -77,6 +86,7 @@ public class Reservation extends BaseEntity{
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
+
     @OneToMany(mappedBy = "reservation", fetch = FetchType.EAGER)
     public Set<Picture> getPictures() {
         return pictures;

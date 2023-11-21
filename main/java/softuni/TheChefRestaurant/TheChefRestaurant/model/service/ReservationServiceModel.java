@@ -11,6 +11,7 @@ import java.util.Set;
 public class ReservationServiceModel {
     private Long id;
     private String name;
+    private String phoneNumber;
     private SectionNameEnum section;
     private UserEntity author;
     private LocalDateTime dateTime;
@@ -36,6 +37,14 @@ public class ReservationServiceModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public SectionNameEnum getSection() {
