@@ -1,0 +1,30 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head}">
+</head>
+<body>
+<div class="wrapper">
+    <!-- Navigation -->
+    <header th:replace="~{fragments/navigation}">
+</header>
+
+    <div class="reservation-info" >
+
+        <img src="/images/logo.jpg" alt="Title image">
+        <div></div>
+        <div>
+            <h2>Your Reservation</h2>
+<!--            <p>-->
+<!--                <th:block th:text = "${@loggedUser.username} + ', thank you for your reservation in our restaurant! Your order details is: Table in the name of ' + ${@addReservationBindingModel.getName()} + ' for '-->
+<!--                + ${@addReservationBindingModel.getCountPeople()} + 'people for' + ${@addReservationBindingModel.getDateTime()} + 'ocklock. You want to be in the ' + ${@addReservationBindingModel.getSection() + 'and you want ' + ${@addReservationBindingModel.getSpecialRequest()}}"></th:block>-->
+<!--            </p>-->
+        </div>
+        <div></div>
+    </div>
+</div>
+<!-- Wrapper Ends -->
+</body>
+<footer th:replace="~{fragments/footer}">
+</footer>
+</html>
