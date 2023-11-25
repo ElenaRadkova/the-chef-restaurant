@@ -1,6 +1,5 @@
 package softuni.TheChefRestaurant.TheChefRestaurant.model.binding;
 
-import jakarta.validation.constraints.Size;
 
 public class UserRegisterBindingModel {
 
