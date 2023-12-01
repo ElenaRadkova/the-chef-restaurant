@@ -16,7 +16,7 @@
             <p>"След една хубава вечеря, човек може да прости на всеки, дори на собствените си роднини."
                 Оскар Уайлд</p>
             <th:block th:unless="${@loggedUser.id == null}">
-            <a href="/reservations/your" class="btn">Your Reservation</a>
+            <a href="/reservations/your/{id}" class="btn">Your Reservation</a>
             <br></br>
             </th:block>
             <th:block th:if="${@loggedUser.id == null}">

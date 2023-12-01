@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.Reservation;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.service.ReservationServiceModel;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.view.ReservationViewModel;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.view.YourReservationViewModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.repository.ReservationRepository;
 import softuni.TheChefRestaurant.TheChefRestaurant.service.CategoryService;
 import softuni.TheChefRestaurant.TheChefRestaurant.service.ReservationService;
@@ -36,11 +38,11 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = modelMapper.map(reservationServiceModel, Reservation.class);
         reservation.setAuthor(userService.findByUserId());
 //       TODO
-        reservation.setCategories(reservationServiceModel
-                .getCategories()
-                .stream()
-                .map(categoryService::findCategoryByName)
-                .collect(Collectors.toSet()));
+//        reservation.setCategories(reservationServiceModel
+//                .getCategories()
+//                .stream()
+//                .map(categoryService::findCategoryByName)
+//                .collect(Collectors.toSet()));
 
 //        reservation.setSection(sectionService.findSectionNameEnum(reservationServiceModel.getSection()));
         reservationRepository.save(reservation);
@@ -51,6 +53,15 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(reservation -> modelMapper.map(reservation, ReservationServiceModel.class))
                 .orElse(null);
     }
+
+    @Override
+    public YourReservationViewModel findYourReservationById(Long id) {
+        return reservationRepository
+                .findById(id)
+                .map(reservation -> modelMapper.map(reservation, YourReservationViewModel.class))
+                .orElse(null);
+    }
+
     @Override
     public ReservationServiceModel findYourReservationView() {
         return reservationRepository.findById(loggedUser.getId())
