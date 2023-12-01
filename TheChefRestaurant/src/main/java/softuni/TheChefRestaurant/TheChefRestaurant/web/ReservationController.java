@@ -12,7 +12,6 @@ import softuni.TheChefRestaurant.TheChefRestaurant.model.service.ReservationServ
 import softuni.TheChefRestaurant.TheChefRestaurant.repository.ReservationRepository;
 import softuni.TheChefRestaurant.TheChefRestaurant.service.ReservationService;
 import softuni.TheChefRestaurant.TheChefRestaurant.util.LoggedUser;
-import softuni.TheChefRestaurant.TheChefRestaurant.util.YourReservation;
 
 @Controller
 @RequestMapping("/reservations")
@@ -21,16 +20,18 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final LoggedUser loggedUser;
     private final ModelMapper modelMapper;
-    private final YourReservation yourReservation;
     private final ReservationRepository reservationRepository;
 
 
-    public ReservationController(ReservationService reservationService, LoggedUser loggedUser, ModelMapper modelMapper, YourReservation yourReservation, ReservationRepository reservationRepository) {
+    public ReservationController(ReservationService reservationService, LoggedUser loggedUser, ModelMapper modelMapper, ReservationRepository reservationRepository) {
         this.reservationService = reservationService;
         this.loggedUser = loggedUser;
         this.modelMapper = modelMapper;
-        this.yourReservation = yourReservation;
         this.reservationRepository = reservationRepository;
+    }
+    @ModelAttribute
+    public AddReservationBindingModel addReservationBindingModel(){
+        return new AddReservationBindingModel();
     }
     @GetMapping("reservations/your/{id}")
     public String your(@PathVariable Long id, Model model){
@@ -72,10 +73,7 @@ public class ReservationController {
         return "redirect:/";
     }
 
-    @ModelAttribute
-    public AddReservationBindingModel addReservationBindingModel(){
-        return new AddReservationBindingModel();
-    }
+
 
 
 }

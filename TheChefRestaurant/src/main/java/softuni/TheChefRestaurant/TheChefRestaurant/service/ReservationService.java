@@ -7,9 +7,5 @@ import softuni.TheChefRestaurant.TheChefRestaurant.model.view.YourReservationVie
 public interface ReservationService {
     void addReservation(ReservationServiceModel reservationServiceModel);
 
-    ReservationServiceModel findYourReservationView();
-
-    ReservationServiceModel findById();
-
     YourReservationViewModel findYourReservationById(Long id);
 }
