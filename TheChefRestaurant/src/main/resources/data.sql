@@ -1,9 +1,9 @@
 -- https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto.data-initialization.using-basic-sql-scripts
 
--- user roles
-INSERT INTO roles (id, name)
+-- user roleEntities
+INSERT INTO roles (id, role)
 VALUES (1, 'ADMIN');
-INSERT INTO roles (id, name)
+INSERT INTO roles (id, role)
 VALUES (2, 'USER');
 
 -- some test users
@@ -15,7 +15,7 @@ VALUES (2, 'user@user.com', 'User Userov', '26dd1ba9ae974a70136ea446304637151666
 
 INSERT INTO users (id, email, full_name, password, username)
 VALUES (3, 'ivan@ivan.com', 'Ivan Ivanov', '26dd1ba9ae974a70136ea4463046371516661b0601ca0fb83a905876ca549b3473dd524d578e241b', 'ivan');
--- user roles
+-- user roleEntities
 -- admin
 INSERT INTO users_roles (`user_entity_id`, `roles_id`)
 VALUES (1, 1);
@@ -40,7 +40,7 @@ VALUES ('3', 'Reservation for special event.', 'CELEBRATE');
 
 
 
--- reservation
+-- reservationEntity
 INSERT INTO reservations ( name, phone_number, special_request, date_time, section, count_people, author_id)
 VALUES
     ('Иван Иванов',
@@ -74,7 +74,7 @@ VALUES
      '2023-12-01 20:00:00',
      'SALON', '2', 1);
 
-INSERT INTO reservations ( name, phone_number, special_request, date_time, section, count_people, author_id)
+INSERT INTO reservations (name, phone_number, special_request, date_time, section, count_people, author_id)
 VALUES
     ('Петър Петров',
      '+359883654123',
@@ -98,25 +98,25 @@ INSERT INTO reservations_categories VALUES (3,2);
 
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Кръщенка', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630581072/d47iy8kxv6qni8euhojk.jpg', 1, 1);
+VALUES ('Кръщенка', 'http://res.cloudinary.com/elenak/image/upload/v1701779984/ybv4upn1yn11nypucxas.jpg', 1, 1);
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Рожден ден', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630581072/d47iy8kxv6qni8euhojk.jpg', 1, 1);
+VALUES ('Рожден ден', 'http://res.cloudinary.com/elenak/image/upload/v1701779940/b7qb9gblqv3kyhfietaw.jpg', 1, 1);
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Коктейл', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630581418/tqhjrinmsb69ev7upg0q.jpg', 1, 2);
+VALUES ('Коктейл', 'http://res.cloudinary.com/elenak/image/upload/v1701779964/mzcfwvsybyydcs0g6fvt.jpg', 1, 2);
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Вечеря', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630582448/oowojgn4lagybkvv20jb.jpg', 1, 2);
+VALUES ('Вечеря', 'http://res.cloudinary.com/elenak/image/upload/v1701780762/awgd8jimjidlz7yuavbp.jpg', 1, 2);
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Иван-абитуриент', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630582596/tclvroyrkcfbz98yklmc.jpg', 1, 3);
+VALUES ('Елена-абитуриент', 'http://res.cloudinary.com/elenak/image/upload/v1701779897/otaucya2y5kuhzzryf8x.jpg', 1, 3);
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Алекс-кръщене', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630582767/ukdmkxyvlnani3hzaafi.jpg', 1, 3);
+VALUES ('Алекс-кръщене', 'http://res.cloudinary.com/elenak/image/upload/v1701779914/ebmwnnxyrvg16oijzuao.jpg', 1, 3);
 
 INSERT INTO pictures(title, url, author_id, reservation_id)
-VALUES ('Gabriela-birthday', 'http://res.cloudinary.com/ch-cloud/image/upload/v1630583376/en6lxhaddbvhf1ksybbu.jpg', 1, 4);
+VALUES ('Gabriela-birthday', 'http://res.cloudinary.com/elenak/image/upload/v1701780010/y5tnahwatpuytyyyjuxz.jpg', 1, 4);
 
 
 

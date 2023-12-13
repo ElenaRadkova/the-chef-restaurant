@@ -1,64 +1,88 @@
 package softuni.TheChefRestaurant.TheChefRestaurant.service.impl;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.RegisterUserDTO;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.binding.UserRegisterBindingModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.service.UserService;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.UserEntity;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.service.UserServiceModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.repository.UserRepository;
-import softuni.TheChefRestaurant.TheChefRestaurant.util.LoggedUser;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final LoggedUser loggedUser;
+    private final UserDetailsService theChefUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, LoggedUser loggedUser) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserDetailsService userDetailService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
-        this.loggedUser = loggedUser;
+        this.theChefUserDetailsService = userDetailService;
+        this.passwordEncoder = passwordEncoder;
     }
     @Override
-    public void registerUser(UserServiceModel userServiceModel) {
-        UserEntity user = modelMapper.map(userServiceModel, UserEntity.class);
-        userRepository.save(user);
-    }
-    @Override
-    public UserServiceModel findUserByUsernameAndPassword(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username, password)
-                             .map(userEntity -> modelMapper.map(userEntity, UserServiceModel.class))
-                              .orElse(null);
-    }
-    @Override
-    public void loginUser(Long id, String username) {
-            loggedUser.setUsername(username);
-            loggedUser.setId(id);
+    public void registerUser(
+            RegisterUserDTO registerUserDTO) {
+
+        userRepository.save(map(registerUserDTO));
+
+//        appEventPublisher.publishEvent(new UserRegisteredEvent(
+//                "UserService",
+//                registerUserDTO.email(),
+//                registerUserDTO.fullName()
+//        ));
     }
 
     @Override
-    public void logout() {
-        loggedUser.setId(null);
-        loggedUser.setUsername(null);
-    }
-
-    @Override
-    public UserServiceModel findById() {
-        return userRepository.findById(loggedUser.getId())
+    public UserServiceModel findById(Long id) {
+        return userRepository.findById(id)
                               .map(userEntity -> modelMapper.map(userEntity, UserServiceModel.class))
                               .orElse(null);
-
     }
 
     @Override
-    public boolean isUsernameExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
+    public boolean isUniqueUsername(String username) {
+        return this.userRepository.findByUsername(username).isEmpty();
     }
 
     @Override
-    public UserEntity findByUserId() {
-        return userRepository.findById(loggedUser.getId()).orElse(null);
-
+    public boolean isUniqueEmail(String email) {
+        return this.userRepository.findByEmail(email).isEmpty();
     }
+
+    @Override
+    public void createUserIfNotExist(String username, String password) {
+    }
+
+    @Override
+    public Authentication login(String username) {
+        UserDetails userDetails = theChefUserDetailsService.loadUserByUsername(username);
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        return auth;
+    }
+    private UserEntity map(RegisterUserDTO registerUserDTO) {
+        return new UserEntity()
+                .setUsername(registerUserDTO.username())
+                .setFullName(registerUserDTO.fullName())
+                .setEmail(registerUserDTO.email())
+                .setPassword(passwordEncoder.encode(registerUserDTO.password()));
+    }
+
 
 }

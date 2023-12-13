@@ -1,21 +1,19 @@
 package softuni.TheChefRestaurant.TheChefRestaurant.service;
 
-import softuni.TheChefRestaurant.TheChefRestaurant.model.entity.UserEntity;
+import org.springframework.security.core.Authentication;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.RegisterUserDTO;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.service.UserServiceModel;
 
 public interface UserService {
-    void registerUser(UserServiceModel userServiceModel);
+    void registerUser(RegisterUserDTO registerUserDTO);
 
-    UserServiceModel findUserByUsernameAndPassword(String username, String password);
+    UserServiceModel findById(Long id);
+    boolean isUniqueUsername(String value);
 
-    void loginUser(Long id, String username);
+    boolean isUniqueEmail(String value);
 
-    void logout();
+    void createUserIfNotExist(String username, String password);
 
- UserServiceModel findById();
-
-    boolean isUsernameExists(String username);
-
-    UserEntity findByUserId();
+    Authentication login(String username);
 
 }

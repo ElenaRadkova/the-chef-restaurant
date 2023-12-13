@@ -2,30 +2,34 @@ package softuni.TheChefRestaurant.TheChefRestaurant.web;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import softuni.TheChefRestaurant.TheChefRestaurant.model.binding.AddReservationBindingModel;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.binding.AddReservationBindingModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.service.ReservationServiceModel;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.view.ReservationViewModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.repository.ReservationRepository;
 import softuni.TheChefRestaurant.TheChefRestaurant.service.ReservationService;
-import softuni.TheChefRestaurant.TheChefRestaurant.util.LoggedUser;
+
+
 
 @Controller
 @RequestMapping("/reservations")
 
 public class ReservationController {
+    private static Logger LOGGER = LoggerFactory.getLogger(ReservationController.class);
     private final ReservationService reservationService;
-    private final LoggedUser loggedUser;
     private final ModelMapper modelMapper;
     private final ReservationRepository reservationRepository;
 
 
-    public ReservationController(ReservationService reservationService, LoggedUser loggedUser, ModelMapper modelMapper, ReservationRepository reservationRepository) {
+    public ReservationController(ReservationService reservationService, ModelMapper modelMapper, ReservationRepository reservationRepository) {
         this.reservationService = reservationService;
-        this.loggedUser = loggedUser;
         this.modelMapper = modelMapper;
         this.reservationRepository = reservationRepository;
     }
@@ -33,25 +37,35 @@ public class ReservationController {
     public AddReservationBindingModel addReservationBindingModel(){
         return new AddReservationBindingModel();
     }
-    @GetMapping("reservations/your/{id}")
+    @ModelAttribute
+    public ReservationViewModel reservationViewModel() {
+        return new ReservationViewModel();
+    }
+    @ModelAttribute
+    public ReservationServiceModel reservationServiceModel() {
+        return new ReservationServiceModel();
+    }
+
+    @GetMapping("/all")
+    public String allReservations(Model model) {
+
+        LOGGER.debug("Model attribute {}.", model.getAttribute("test"));
+        LOGGER.debug("All reservations were requested...");
+
+        model.addAttribute("reservations", reservationService.findAllReservationsView());
+
+        return "reservations";
+    }
+
+    @GetMapping("/your/{id}")
     public String your(@PathVariable Long id, Model model){
         model.addAttribute("reservation", reservationService.findYourReservationById(id));
-
         return "your-reservation";
     }
-//    @GetMapping("/your/{id}")
-//    private String your(@PathVariable Long id, Model model){
-//        model.addAttribute("reservation", modelMapper
-//                .map(reservationService.findById(id), ReservationViewModel.class));
-//        return "reservation";
-//    }
 
 
     @GetMapping("/add")
     public String add(){
-       if(loggedUser.getId() == null) {
-           return "redirect:/users/login";
-       }
         return "add-reservation";
     }
 
@@ -70,7 +84,7 @@ public class ReservationController {
         ReservationServiceModel reservationServiceModel = modelMapper.map(addReservationBindingModel, ReservationServiceModel.class);
         reservationService.addReservation(reservationServiceModel);
 
-        return "redirect:/";
+        return "redirect:all";
     }
 
 

@@ -7,10 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import softuni.TheChefRestaurant.TheChefRestaurant.model.binding.UserLoginBindingModel;
-import softuni.TheChefRestaurant.TheChefRestaurant.model.binding.UserRegisterBindingModel;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.RegisterUserDTO;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.binding.UserRegisterBindingModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.model.service.UserServiceModel;
-import softuni.TheChefRestaurant.TheChefRestaurant.model.view.UserViewModel;
+import softuni.TheChefRestaurant.TheChefRestaurant.model.dto.view.UserViewModel;
 import softuni.TheChefRestaurant.TheChefRestaurant.service.UserService;
 
 
@@ -23,87 +23,39 @@ public class UserController {
     public UserController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
         this.modelMapper = modelMapper;
-
     }
 
     @ModelAttribute
     public UserRegisterBindingModel userRegisterBindingModel(){
         return new UserRegisterBindingModel();
     }
+
     @GetMapping("/register")
     public String register(){
         return "register";
     }
     @PostMapping("/register")
-    public String registerConfirm(@Valid UserRegisterBindingModel userRegisterBindingModel,
-                                  BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()){
-            redirectAttributes
-                    .addFlashAttribute("userRegisterBindingModel",userRegisterBindingModel);
-            redirectAttributes
-                    .addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
-                                                                              bindingResult);
-            return "redirect:/users/register";
-        }
+    public String register(RegisterUserDTO registerUserDTO) {
 
-        boolean isUsernameExists = userService.isUsernameExists(userRegisterBindingModel.getUsername());
-        if(isUsernameExists){
-//TODO
-        }
+//        boolean isBot = !reCaptchaService
+//                .verify(reCaptchaResponse)
+//                .map(ReCaptchaResponseDTO::isSuccess)
+//                .orElse(false);
+//
+//        if (isBot) {
+//            return "redirect:/";
+//        }
 
-        userService.registerUser(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+        userService.registerUser(registerUserDTO);
 
-        return "redirect:/users/login";
-    }
-    @ModelAttribute
-    public UserLoginBindingModel userLoginBindingModel(){
-        return new UserLoginBindingModel();
-    }
-    @GetMapping("/login")
-    public String login(Model model){
-        model.addAttribute("isExist", true);
-        return "login";
-    }
-    @PostMapping("/login")
-    public String loginConfirm(@Valid UserLoginBindingModel userLoginBindingModel,
-                                  BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()){
-            redirectAttributes
-                    .addFlashAttribute("userLoginBindingModel",userLoginBindingModel)
-                    .addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel",
-                            bindingResult);
-            return "redirect:/users/login";
-        }
-//Проверяваме си дали юзъра съществува в базата
-        UserServiceModel user = userService.findUserByUsernameAndPassword(userLoginBindingModel.getUsername(),
-                                                                          userLoginBindingModel.getPassword());
-        if(user == null){
-            redirectAttributes
-                    .addFlashAttribute("isExist", false)
-                    .addFlashAttribute("userLoginBindingModel",userLoginBindingModel);
-            redirectAttributes
-                    .addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel",
-                            bindingResult);
-            return "redirect:/users/login";
-        }
-        userService.loginUser(user.getId(), user.getUsername());
-
-        return "redirect:/";
+        return "redirect:/login";
     }
 
-    @GetMapping("/logout")
-    public String logout(){
-        userService.logout();
-        return "redirect:/";
-    }
-
-    @GetMapping("/profile/{id}")
+    @GetMapping("/profile")
     private String profile(@PathVariable Long id, Model model){
         model.addAttribute("user", modelMapper
-                             .map(userService.findById(), UserViewModel.class));
+                             .map(userService.findById(id), UserViewModel.class));
            return "profile";
     }
-
-
 }
 
